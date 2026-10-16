@@ -2,7 +2,25 @@
 
 > **Datathon 2026 Submission** | *Organized by Data Science Club (DSC) in collaboration with IIEC, VIT-AP University*
 
+<<<<<<< Updated upstream
 AegisMargin is an intelligent decision-support platform designed to help managers identify potential revenue and margin problems, investigate their underlying drivers using explainable machine learning, and execute immediate remediation playbooks[cite: 1, 2].
+=======
+### Real-Time Business Decision-Support Engine for Margin Protection
+
+*Detect. Explain. Remediate — before the loss reaches the ledger.*
+
+![Python](https://img.shields.io/badge/Python-3.13+-3776AB?logo=python&logoColor=white)
+![LightGBM](https://img.shields.io/badge/Model-LightGBM-9ACD32)
+![SHAP](https://img.shields.io/badge/Explainability-SHAP-FF4B4B)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
+![Jinja2](https://img.shields.io/badge/UI-Jinja2-B41717)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Status](https://img.shields.io/badge/Status-Datathon%20Prototype-orange)
+
+**Datathon 2026 Submission** · Organized by the Data Science Club (DSC) in collaboration with IIEC, VIT-AP University
+
+</div>
+>>>>>>> Stashed changes
 
 ---
 

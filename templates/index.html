@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AegisMargin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: {
+    colors: { base:'#0A0D14', card:'#181818', line:'#303030', ink:'#F0F0F0', mute:'#8A93A6',
+          risk:'#FF4D5E', safe:'#3DDC97', warn:'#FFB020' },
+    fontFamily: { display:['"Bebas Neue"','Impact','sans-serif'], mono:['"Space Mono"','ui-monospace','monospace'] }
+  } }
+}
+</script>
+<style>
+  body { background:#000; font-family:'Space Mono',ui-monospace,monospace; }
+  body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px); background-size:4px 4px; }
+  .rule-label { display:flex; align-items:center; gap:.9rem; letter-spacing:.22em; font-size:.72rem; color:#8A93A6; text-transform:uppercase; }
+  .rule-label::after { content:""; flex:1; height:1px; background:#303030; }
+  .glass { background:rgba(24,24,24,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .btn { border:2px solid #F0F0F0; color:#F0F0F0; transition:background .15s,color .15s; }
+  .btn:hover { background:#F0F0F0; color:#0A0D14; }
+  .btn-solid { background:#F0F0F0; color:#0A0D14; border:2px solid #F0F0F0; }
+  .btn-solid:hover { background:#fff; }
+  select.field { appearance:none; background-image:linear-gradient(45deg,transparent 50%,#F0F0F0 50%),linear-gradient(135deg,#F0F0F0 50%,transparent 50%);
+    background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%; background-size:6px 6px; background-repeat:no-repeat; }
+  :focus-visible { outline:2px solid #FFB020; outline-offset:2px; }
+  .ghost { position:fixed; right:-2vw; bottom:-4vw; font:15vw/1 'Bebas Neue',sans-serif; color:rgba(255,255,255,.025); pointer-events:none; z-index:0; }
+  .skeleton { opacity:.35; transition:opacity .2s; }
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body class="text-ink min-h-screen">
+<div class="ghost" aria-hidden="true">AEGIS</div>
+
+<main class="relative z-10 mx-auto max-w-5xl px-5 pb-24 pt-10">
+
+  <!-- Header -->
+  <header>
+    <h1 class="font-display text-7xl sm:text-8xl leading-none tracking-[.08em]">AEGISMARGIN</h1>
+    <div class="mt-5 h-[6px] bg-ink"></div>
+    <p class="mt-3 text-sm tracking-[.3em] text-mute">// PROFIT LEAK COMMAND CENTRE //</p>
+  </header>
+
+  <!-- KPI bar -->
+  <section class="mt-12" aria-label="Executive summary">
+    <div class="rule-label">Executive summary</div>
+    <dl class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="glass border-2 border-line p-4">
+        <dt class="text-xs text-mute tracking-widest">Total profit bleed</dt>
+        <dd class="mt-2 font-display text-4xl sm:text-5xl text-risk">${{ "{:,.2f}".format(kpis.profit_bleed) }}</dd>
+      </div>
+      <div class="glass border-2 border-line p-4">
+        <dt class="text-xs text-mute tracking-widest">Negative margin orders</dt>
+        <dd class="mt-2 font-display text-4xl sm:text-5xl">{{ "{:,}".format(kpis.neg_orders) }}</dd>
+        <dd class="mt-1 text-xs text-warn">{{ kpis.neg_pct }}% of total</dd>
+      </div>
+      <div class="glass border-2 border-line p-4">
+        <dt class="text-xs text-mute tracking-widest">Structural defect SKUs</dt>
+        <dd class="mt-2 font-display text-4xl sm:text-5xl">{{ kpis.defect_skus }} SKUs</dd>
+        <dd class="mt-1 text-xs text-warn">Cost &gt; list price</dd>
+      </div>
+      <div class="glass border-2 border-line p-4">
+        <dt class="text-xs text-mute tracking-widest">Model precision</dt>
+        <dd class="mt-2 font-display text-4xl sm:text-5xl text-safe">{{ "%.3f"|format(kpis.roc_auc) }}</dd>
+        <dd class="mt-1 text-xs text-mute">ROC-AUC</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Investigator -->
+  <section class="mt-14" aria-labelledby="inv-h">
+    <div class="rule-label" id="inv-h">Transaction loss investigator</div>
+    <div class="mt-4 flex flex-col sm:flex-row gap-3">
+      <label for="tx-select" class="sr-only">Flagged transaction</label>
+      <select id="tx-select" class="field flex-1 bg-card border-2 border-ink px-5 py-4 text-sm tracking-wider">
+        <option value="" disabled selected>Select a flagged transaction</option>
+        {% for t in tx_ids %}<option value="{{ t }}">{{ t }}</option>{% endfor %}
+      </select>
+    </div>
+
+    <div id="empty" class="mt-4 border-2 border-dashed border-line p-8 text-sm text-mute">
+      Pick a flagged transaction to see what went wrong and what to do about it.
+    </div>
+    <div id="error" class="hidden mt-4 border-2 border-risk p-4 text-sm text-risk" role="alert"></div>
+
+    <div id="detail" class="hidden mt-4 space-y-12">
+      <!-- Metric grid -->
+      <dl id="metrics" class="grid grid-cols-2 md:grid-cols-3 gap-3"></dl>
+
+      <!-- SHAP -->
+      <div>
+        <div class="rule-label">Why this is flagged</div>
+        <div class="mt-4 overflow-x-auto border-2 border-line bg-card">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs tracking-widest text-mute border-b-2 border-line">
+                <th class="p-3 font-normal">Feature</th>
+                <th class="p-3 font-normal">Observed</th>
+                <th class="p-3 font-normal text-right">Impact</th>
+              </tr>
+            </thead>
+            <tbody id="shap-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Playbook -->
+      <div>
+        <div class="rule-label">Manager remediation playbook</div>
+        <div id="playbook" class="mt-4 space-y-3"></div>
+        <button id="execute" type="button" class="btn-solid mt-5 w-full py-5 font-display text-3xl tracking-[.2em] hover:bg-white">
+          EXECUTE REMEDIATION
+        </button>
+        <p id="toast" class="mt-3 text-sm text-safe min-h-[1.25rem]" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const select = $('tx-select'), detail = $('detail'), empty = $('empty'), err = $('error');
+  let current = null;
+
+  const money = (v) => v == null ? '—' : '$' + Number(v).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const num = (v) => v == null ? '—' : (typeof v === 'number' ? +v.toFixed(3) : v);
+  const pct = (v) => v == null ? '—' : (Number(v) <= 1 ? (Number(v) * 100).toFixed(0) : Number(v).toFixed(0)) + '%';
+
+  const SEV = {
+    Critical: {bar: 'border-risk', badge: 'bg-risk text-base'},
+    High:     {bar: 'border-warn', badge: 'bg-warn text-base'},
+    Medium:   {bar: 'border-sky-400', badge: 'bg-sky-400 text-base'},
+  };
+
+  // Safe element builder (text only, no innerHTML)
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+  function metric(label, value, tone) {
+    const box = el('div', 'glass border-2 border-line p-4');
+    box.append(el('dt', 'text-xs text-mute tracking-widest', label),
+               el('dd', 'mt-2 font-display text-3xl break-words ' + (tone || ''), value));
+    return box;
+  }
+
+  function renderMetrics(o) {
+    const m = $('metrics'); m.replaceChildren(
+      metric('Product ID', o.product_id ?? '—'),
+      metric('Category', o.category ?? '—'),
+      metric('Quantity', num(o.quantity)),
+      metric('Unit cost / list price', money(o.unit_cost) + ' / ' + money(o.list_price),
+             o.unit_cost > o.list_price ? 'text-risk' : ''),
+      metric('Discount rate', pct(o.discount), 'text-warn'),
+      metric('Net loss', money(o.net_loss), 'text-risk'),
+    );
+  }
+
+  function renderShap(rows) {
+    const body = $('shap-body'); body.replaceChildren();
+    if (!rows.length) {
+      const tr = el('tr'); const td = el('td', 'p-4 text-mute', 'No driver data returned for this transaction.'); td.colSpan = 3; tr.append(td); body.append(tr); return;
+    }
+    rows.forEach((r) => {
+      const risk = r.impact > 0;
+      const tr = el('tr', 'border-b border-line last:border-0');
+      const badge = el('span', 'inline-block px-2 py-1 text-xs font-bold border-2 ' +
+        (risk ? 'border-risk text-risk bg-risk/10' : 'border-safe text-safe bg-safe/10'),
+        (risk ? '▲ +' : '▼ ') + r.impact.toFixed(3));
+      const impactCell = el('td', 'p-3 text-right'); impactCell.append(badge);
+      tr.append(el('td', 'p-3', r.feature), el('td', 'p-3 text-mute', r.value == null ? '—' : String(num(r.value))), impactCell);
+      body.append(tr);
+    });
+  }
+
+  function renderPlaybook(items) {
+    const box = $('playbook'); box.replaceChildren();
+    if (!items.length) { box.append(el('p', 'text-sm text-mute', 'No remediation actions generated.')); return; }
+    items.forEach((a) => {
+      const s = SEV[a.severity] || SEV.Medium;
+      const card = el('article', 'glass border-2 border-line border-l-[10px] p-4 ' + s.bar);
+      const head = el('div', 'flex items-center gap-3');
+      head.append(el('span', 'px-2 py-0.5 text-xs font-bold tracking-widest ' + s.badge, a.severity.toUpperCase()),
+                  el('h3', 'font-display text-2xl tracking-wider', a.title));
+      card.append(head);
+      if (a.action) card.append(el('p', 'mt-2 text-sm text-ink/90 leading-relaxed max-w-[70ch]', a.action));
+      box.append(card);
+    });
+  }
+
+  async function load(id) {
+    current = id; err.classList.add('hidden'); $('toast').textContent = '';
+    empty.classList.add('hidden'); detail.classList.remove('hidden'); detail.classList.add('skeleton');
+    try {
+      const res = await fetch('/api/inspect/' + encodeURIComponent(id));
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || 'Request failed (' + res.status + ')');
+      const d = await res.json();
+      if (current !== id) return; // a newer selection won the race
+      renderMetrics(d.order); renderShap(d.shap); renderPlaybook(d.playbook);
+    } catch (e) {
+      detail.classList.add('hidden');
+      err.textContent = 'Could not load ' + id + ': ' + e.message + '. Pick it again to retry.';
+      err.classList.remove('hidden');
+    } finally {
+      detail.classList.remove('skeleton');
+    }
+  }
+
+  select.addEventListener('change', () => load(select.value));
+
+  $('execute').addEventListener('click', async (ev) => {
+    if (!current) return;
+    const btn = ev.currentTarget; btn.disabled = true; btn.classList.add('opacity-60');
+    try {
+      const res = await fetch('/api/remediate/' + encodeURIComponent(current), {method: 'POST'});
+      if (!res.ok) throw new Error('Request failed (' + res.status + ')');
+      $('toast').className = 'mt-3 text-sm text-safe min-h-[1.25rem]';
+      $('toast').textContent = 'Remediation executed for ' + current + '.';
+    } catch (e) {
+      $('toast').className = 'mt-3 text-sm text-risk min-h-[1.25rem]';
+      $('toast').textContent = 'Remediation failed: ' + e.message;
+    } finally { btn.disabled = false; btn.classList.remove('opacity-60'); }
+  });
+})();
+</script>
+</body>
+</html>
