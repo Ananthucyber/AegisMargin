@@ -348,7 +348,7 @@ AegisMargin/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Ananthucyber/AegisMargin.git
+git clone https://github.com/SouLCodes-main/AegisMargin.git
 cd AegisMargin
 
 # 2. Install dependencies (using uv)
