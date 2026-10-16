@@ -75,9 +75,12 @@ st.header("🎯 Recommended Manager Action")
 actions = generate_manager_remediation(selected_row, leak_prob)
 
 for act in actions:
+    recommendation = f"**[{act['severity']}] {act['issue']}**"
     if act["severity"] == "CRITICAL":
-        st.error(f"**[{act['severity']}] {act['issue']}**\n\n👉 **Action:** {act['action']}")
+        st.error(recommendation)
     elif act["severity"] == "HIGH":
-        st.warning(f"**[{act['severity']}] {act['issue']}**\n\n👉 **Action:** {act['action']}")
+        st.warning(recommendation)
     else:
-        st.info(f"**[{act['severity']}] {act['issue']}**\n\n👉 **Action:** {act['action']}")
+        st.info(recommendation)
+
+    st.markdown(f"**Recommended action**\n\n{act['action']}")

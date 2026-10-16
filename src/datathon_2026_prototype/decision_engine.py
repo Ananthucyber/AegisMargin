@@ -8,7 +8,7 @@ def generate_manager_remediation(record_row, leak_probability):
     if record_row["unit_cost"] > record_row["list_price"]:
         actions.append({
             "severity": "CRITICAL",
-            "issue": f"Base Cost (${record_row['unit_cost']:.2f}) exceeds List Price (${record_row['list_price']:.2f})[cite: 1].",
+            "issue": f"Base cost (\\${record_row['unit_cost']:.2f}) exceeds list price (\\${record_row['list_price']:.2f}).",
             "action": "Pause product listing immediately. Renegotiate COGS with supplier or update master list price."
         })
     
@@ -16,7 +16,7 @@ def generate_manager_remediation(record_row, leak_probability):
     elif record_row["discount_pct"] > 0.15 and leak_probability > 0.60:
         actions.append({
             "severity": "HIGH",
-            "issue": f"Aggressive discount ({record_row['discount_pct']*100:.0f}%) driving negative gross profit[cite: 1].",
+            "issue": f"Aggressive discount ({record_row['discount_pct']*100:.0f}%) driving negative gross profit.",
             "action": f"Cap max discount allowance to 10% on Product ID {record_row['product_id']}."
         })
     
