@@ -39,7 +39,7 @@ col4.metric("Model AUC", "0.992", "LightGBM Engine")
 st.markdown("---")
 
 # Investigation Dashboard
-st.header("🔍 Transaction Loss Investigator")
+st.header("Transaction Loss Investigator")
 
 # Filter Negative Margin Transactions
 flagged_df = df[df["is_leak"] == 1].reset_index(drop=True)
@@ -71,7 +71,7 @@ with c2:
 st.markdown("---")
 
 # Action Recommendation Panel
-st.header("🎯 Recommended Manager Action")
+st.header("Recommended Manager Action")
 actions = generate_manager_remediation(selected_row, leak_prob)
 
 for act in actions:
