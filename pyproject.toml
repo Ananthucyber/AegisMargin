@@ -8,9 +8,13 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "joblib>=1.6.0",
     "lightgbm>=4.7.0",
     "numpy>=2.5.4",
     "pandas>=3.0.6",
+    "scikit-learn>=1.9.1",
+    "shap>=0.53.0",
+    "streamlit>=1.66.0",
     "xgboost>=3.4.1",
 ]
 
