@@ -18,10 +18,6 @@ AegisMargin is an intelligent decision-support platform designed to help manager
 **Datathon 2026 Submission** · Organized by the Data Science Club (DSC) in collaboration with IIEC, VIT-AP University
 
 </div>
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> a94ae12a351e09cdfe5afad15ec62495ad5e17b5
 
 ---
 
