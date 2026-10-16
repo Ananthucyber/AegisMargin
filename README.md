@@ -45,6 +45,8 @@ AegisMargin is an intelligent decision-support platform designed to help manager
 
 ---
 
+![Products](productss.png)
+
 ## 🎯 Overview
 
 **AegisMargin** is an intelligent decision-support platform that helps managers **identify revenue and margin leaks, understand why they happen, and act on them immediately**.
