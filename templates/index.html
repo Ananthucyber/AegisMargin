@@ -12,19 +12,19 @@
 tailwind.config = {
   darkMode: 'class',
   theme: { extend: {
-    colors: { base:'#0A0D14', card:'#181818', line:'#303030', ink:'#F0F0F0', mute:'#8A93A6',
-          risk:'#FF4D5E', safe:'#3DDC97', warn:'#FFB020' },
+    colors: { base:'#0A0D14', card:'#121824', line:'#2A3345', ink:'#F0F0F0', mute:'#8A93A6',
+              risk:'#FF4D5E', safe:'#3DDC97', warn:'#FFB020' },
     fontFamily: { display:['"Bebas Neue"','Impact','sans-serif'], mono:['"Space Mono"','ui-monospace','monospace'] }
   } }
 }
 </script>
 <style>
-  body { background:#000; font-family:'Space Mono',ui-monospace,monospace; }
+  body { background:#0A0D14; font-family:'Space Mono',ui-monospace,monospace; }
   body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
     background-image:radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px); background-size:4px 4px; }
   .rule-label { display:flex; align-items:center; gap:.9rem; letter-spacing:.22em; font-size:.72rem; color:#8A93A6; text-transform:uppercase; }
-  .rule-label::after { content:""; flex:1; height:1px; background:#303030; }
-  .glass { background:rgba(24,24,24,.92); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+  .rule-label::after { content:""; flex:1; height:1px; background:#2A3345; }
+  .glass { background:rgba(18,24,36,.72); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   .btn { border:2px solid #F0F0F0; color:#F0F0F0; transition:background .15s,color .15s; }
   .btn:hover { background:#F0F0F0; color:#0A0D14; }
   .btn-solid { background:#F0F0F0; color:#0A0D14; border:2px solid #F0F0F0; }
